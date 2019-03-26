@@ -3,22 +3,16 @@ import java.util.*;
 
 public class Game {
 
-    //TODO: MAKE USE OF NEW TILE CLASS
-
     private int size = 4;
 
     //instance fields
     private Tile[][] gameBoard = new Tile[size][size];
 
-    //calculates amount of free space left in the game for generation purposes
-    //will be removed once array list is correctly set up
-    private int freeSpace = 16;
-
-    private ArrayList<int[]> freeSpaces = new ArrayList<>();
+    private ArrayList<Tile> freeSpaces = new ArrayList<>();
     
     private boolean gameOver = false;
 
-    private int boardWidth, boardHeight;
+    private int boardSize;
 
     //0 = empty square
     //other numbers signify the actual number
@@ -26,7 +20,7 @@ public class Game {
     //--------------------
 
     //constructor
-    public Game(int boardWidth, int boardHeight){
+    public Game(int boardSize){
 
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
@@ -35,75 +29,66 @@ public class Game {
 
             }//end for
         }//end for
-
-        this.boardHeight = boardHeight;
-        this.boardWidth =  boardWidth;
-
-//        generate(4);
-
-        printBoard();
-
-        System.out.println("freeSpace: " + freeSpace);
-
+        
+        this.boardSize =  boardSize;
+        initFreeSpaces();
+//        printBoard();
+        generate(4);
+//        printBoard();
+        System.out.println("Free Space: " + freeSpaces.size());
         System.out.println(moveChecker());
 
     }//end Game
 
     //--------------------
 
-    //methods
-//    public void generate(int reps){
-//        //generates 2's and 4's on the board in free spaces
-//        //first, checks if there are enough free spaces.
-//        //if there are, it will generate them in these free spaces
-//
-//        int randR, randC;
-//
-//        if(reps > freeSpace){
-//
-//            System.out.println("Error: Not enough free space to generate");
-//
-//        }else {
-//
-//            for (int i = 0; i < reps; i++) {
-//
-//                randR = (int) (Math.random() * size);
-//                randC = (int) (Math.random() * size);
-//
-//                if (gameBoard[randR][randC] == 0) {
-//
-//                    if ((int) (Math.random() * 2) >= 1) {
-//
-//                        gameBoard[randR][randC] = 2;
-//                        freeSpace--;
-//
-//                    }else {
-//
-//                        gameBoard[randR][randC] = 4;
-//                        freeSpace--;
-//
-//                    }//end if else
-//
-//                }else {
-//
-//                    i--;
-//
-//                }//end if else
-//
-//            }//end for
-//
-//        }//end if else
-//
-//    }//end generate
+    //methods:
+    public void generate(int reps){
+        //need to be optimized for tile class
+        //generates 2's and 4's on the board in free spaces
+        //first, checks if there are enough free spaces.
+        //if there are, it will generate them in these free spaces
+
+        int randIndex;
+
+        if(reps > freeSpaces.size()){
+
+            System.out.println("Error: Not enough free space to generate");
+
+        }else{
+
+            for (int i = 0; i < reps; i++) {
+
+                randIndex = (int)(Math.random() * freeSpaces.size());
+
+                if((int)(Math.random() * 2) < 1){
+                    //changes number to two
+
+                    freeSpaces.get(randIndex).setValue(2);
+                    freeSpaces.remove(randIndex);
+
+                }else{
+
+                    freeSpaces.get(randIndex).setValue(4);
+                    freeSpaces.remove(randIndex);
+
+                }//end if else
+
+            }//end for
+
+        }//end if else
+
+    }//end generate
 
     //--------------------
 
     public void printBoard(){
+        //compatible with new Tile system
 
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
 
-                System.out.print(gameBoard[r][c] + ", ");
+                System.out.print(gameBoard[r][c].getValue() + ", ");
 
             }//end for
             System.out.println();
@@ -115,6 +100,7 @@ public class Game {
 
     //checks if game is over or not
     public boolean moveChecker(){
+        //Should comply with new Tile class
 
         boolean deadGame = true;
 
@@ -123,7 +109,7 @@ public class Game {
             for (int c = 0; c < gameBoard[0].length; c++) {
 
                 if(c + 1 < gameBoard[0].length) {
-                    if (gameBoard[r][c] == gameBoard[r][c + 1]) {
+                    if (gameBoard[r][c].getValue() == gameBoard[r][c + 1].getValue()) {
 
                         deadGame = false;
 
@@ -131,7 +117,7 @@ public class Game {
                 }//end if
 
                 if(c - 1 >= 0){
-                    if(gameBoard[r][c] == gameBoard[r][c - 1]){
+                    if(gameBoard[r][c].getValue() == gameBoard[r][c - 1].getValue()){
 
                         deadGame = false;
 
@@ -139,7 +125,7 @@ public class Game {
                 }//end if
 
                 if(r + 1 < gameBoard.length){
-                    if(gameBoard[r][c] == gameBoard[r + 1][c]){
+                    if(gameBoard[r][c].getValue() == gameBoard[r + 1][c].getValue()){
 
                         deadGame = false;
 
@@ -147,7 +133,7 @@ public class Game {
                 }//end if
 
                 if(r - 1 >= 0){
-                    if(gameBoard[r][c] == gameBoard[r-1][c]){
+                    if(gameBoard[r][c].getValue() == gameBoard[r-1][c].getValue()){
 
                         deadGame = false;
 
@@ -158,7 +144,7 @@ public class Game {
         }//end for
 
         //checks for free spaces
-        if(freeSpace > 0){
+        if(freeSpaces.size() > 0){
 
             deadGame = false;
 
@@ -175,8 +161,7 @@ public class Game {
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
 
-                freeSpaces.add(new int[2]);
-//                freeSpaces
+                freeSpaces.add(gameBoard[r][c]);
 
             }//end for
         }//end for
@@ -186,25 +171,13 @@ public class Game {
     //--------------------
 
     public void moveUp(){
+        //if you're wondering why I'm not doing the moving in here is because this does it for all the tiles
+        //move useful to make a separate method to move one tile and call it in this method
 
         for (int r = 1; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
 
-                //add matching numbers
-                if(gameBoard[r][c].getValue() == gameBoard[r-1][c].getValue()){
-                    
-                    gameBoard[r-1][c].setValue(gameBoard[r-1][c].getValue() + gameBoard[r][c].getValue());
-                    gameBoard[r][c].setValue(0);
-                    
-                }//end if
-
-                //move if free space
-                if(gameBoard[r-1][c].getValue() == 0){
-
-                    gameBoard[r-1][c].setValue(gameBoard[r][c].getValue());
-                    gameBoard[r][c].setValue(0);
-                    
-                }//end if
+                move(1, r, c);
                 
             }//end for
         }//end for
@@ -246,13 +219,7 @@ public class Game {
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = gameBoard.length - 2; c >= 0; c--) {
 
-                //add matching numbers
-                if(gameBoard[r][c].getValue() == gameBoard[r+1][c].getValue()){
-
-                    gameBoard[r][c+1].setValue(gameBoard[r][c+1].getValue() + gameBoard[r][c].getValue());
-                    gameBoard[r][c].setValue(0);
-
-                }//end if
+                move(2, r, c);
 
             }//end for
         }//end for
@@ -262,50 +229,62 @@ public class Game {
     //--------------------
 
     public void move(int dir, int r, int c){
-        //recursive method to move a specific square in a certain direction until it combines or runs out of free spaces
+        //method to move a specific tile in a certain direction until it combines or runs out of free spaces
+        //doesn't actually move the tile object, instead, it only shifts the values
         //1 is up, 2 is right, 3 is down, 4 is left
+        //I could probably make each direction its own method, but meh
 
         if(dir == 1){
             //move up
 
+            if(r-1 >= 0) {
+                if (gameBoard[r-1][c].getValue() == 0) {
 
+                    gameBoard[r-1][c].setValue(gameBoard[r][c].getValue());
+                    gameBoard[r][c].setValue(0);
+                    move(dir, r-1, c);
+
+                }//end if
+            }//end if
 
         }else if(dir == 2){
             //move right
 
+            if(c+1 < gameBoard[0].length) {
+                if (gameBoard[r][c+1].getValue() == 0) {
 
+                    gameBoard[r][c+1].setValue(gameBoard[r][c].getValue());
+                    gameBoard[r][c].setValue(0);
+                    move(dir, r, c+1);
+
+                }//end if
+            }//end if
 
         }else if(dir == 3){
             //move down
 
-            if(gameBoard[r+1][c].getValue() == 0){
+            if(r+1 < gameBoard.length) {
+                if (gameBoard[r+1][c].getValue() == 0) {
 
-                gameBoard[r+1][c].setValue(gameBoard[r][c].getValue());
-                gameBoard[r][c].setValue(0);
-                move(dir, r, c);
+                    gameBoard[r+1][c].setValue(gameBoard[r][c].getValue());
+                    gameBoard[r][c].setValue(0);
+                    move(dir, r+1, c);
 
-            }else if(gameBoard[r][c] == gameBoard[r+1][c]){
-
-                gameBoard[r+1][c].setValue(gameBoard[r+1][c].getValue() + gameBoard[r][c].getValue());
-                gameBoard[r][c].setValue(0);
-
-            }//end if else
+                }//end if
+            }//end if
 
         }else if(dir == 4){
             //move left
 
-            if(gameBoard[r][c-1].getValue() == 0){
+            if(c-1 >= 0) {
+                if (gameBoard[r][c-1].getValue() == 0) {
 
-                gameBoard[r][c-1].setValue(gameBoard[r][c-1].getValue() + gameBoard[r][c].getValue());
-                gameBoard[r][c].setValue(0);
-                move(dir, r, c);
+                    gameBoard[r][c-1].setValue(gameBoard[r][c-1].getValue() + gameBoard[r][c].getValue());
+                    gameBoard[r][c].setValue(0);
+                    move(dir, r, c - 1);
 
-            }else if(gameBoard[r][c] == gameBoard[r+1][c]){
-
-                gameBoard[r][c-1].setValue(gameBoard[r][c-1].getValue() + gameBoard[r][c].getValue());
-                gameBoard[r][c].setValue(0);
-
-            }//if else
+                }//end if
+            }//end if
 
         }else{
 
@@ -317,6 +296,14 @@ public class Game {
 
     //--------------------
 
+    public void combine(){
+        //combines numbers
+
+
+    }//end combine
+
+    //--------------------
+
     public void draw(Graphics2D g2){
 
         g2.setStroke(new BasicStroke(3));
@@ -325,33 +312,8 @@ public class Game {
 
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
-
-                if(gameBoard[r][c].getValue() == 0){
-
-                    g2.setColor(new Color(235, 235, 235));
-                    g2.fillRect(50 + c * boardWidth/size, 50 + r * boardHeight/size, boardWidth/size, boardHeight/size);
-                    g2.setColor(new Color(65, 65, 65));
-                    g2.drawRect(50 + c * boardWidth/size, 50 + r * boardHeight/size, boardWidth/size, boardHeight/size);
-
-                }else if(gameBoard[r][c].getValue() == 2){
-
-                    g2.setColor(new Color(255, 238, 73));
-                    g2.fillRect(50 + c * boardWidth/size, 50 + r * boardHeight/size, boardWidth/size, boardHeight/size);
-                    g2.setColor(new Color(65, 65, 65));
-                    g2.drawRect(50 + c * boardWidth/size, 50 + r * boardHeight/size, boardWidth/size, boardHeight/size);
-                    g2.setColor(new Color(89, 67, 25));
-                    g2.drawString("2", c * boardWidth/size + 95, r * boardHeight/size + 165);
-
-                }else if(gameBoard[r][c].getValue() == 4){
-
-                    g2.setColor(new Color(255, 201, 76));
-                    g2.fillRect(50 + c * boardWidth/size, 50 + r * boardHeight/size, boardWidth/size, boardHeight/size);
-                    g2.setColor(new Color(65, 65, 65));
-                    g2.drawRect(50 + c * boardWidth/size, 50 + r * boardHeight/size, boardWidth/size, boardHeight/size);
-                    g2.setColor(new Color(89, 67, 25));
-                    g2.drawString("4", c * boardWidth/size + 95, r * boardHeight/size + 165);
-
-                }
+                
+                gameBoard[r][c].draw(boardSize/size, g2);
 
             }//end for
         }//end for

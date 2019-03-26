@@ -19,7 +19,7 @@ public class GamePanel extends JPanel {
 
     private int width, height;
 
-    private int boardWidth, boardHeight;
+    private int boardSize;
 
     //--------------------
 
@@ -29,9 +29,8 @@ public class GamePanel extends JPanel {
         setSize(w, h);
         this.width = w;
         this.height = h;
-        boardWidth = 600;
-        boardHeight = 600;
-        game = new Game(boardWidth, boardHeight);
+        boardSize = 600;
+        game = new Game(boardSize);
         setUpMouseListener();
         setUpKeyListener();
 
@@ -53,8 +52,8 @@ public class GamePanel extends JPanel {
         g2.setFont(new Font("Comic Sans", Font.BOLD, 25));
         g2.drawString("2048", 320, 35);
 
-        g2.setColor(new Color(235, 235, 235));
-        g2.fillRect(50, 50, boardWidth, boardHeight);
+//        g2.setColor(new Color(235, 235, 235));
+//        g2.fillRect(50, 50, boardSize, boardSize);
 
         game.draw(g2);
 
