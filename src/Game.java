@@ -7,11 +7,9 @@ public class Game {
 
     //instance fields
     private Tile[][] gameBoard = new Tile[size][size];
-
     private ArrayList<Tile> freeSpaces = new ArrayList<>();
-    
+    private ArrayList<Tile> beenCombined = new ArrayList<>();
     private boolean gameOver = false;
-
     private int boardSize;
 
     //0 = empty square
@@ -25,7 +23,7 @@ public class Game {
         for (int r = 0; r < gameBoard.length; r++) {
             for (int c = 0; c < gameBoard[0].length; c++) {
 
-                gameBoard[r][c] = new Tile(r, c, 0);
+                gameBoard[r][c] = new Tile(r, c, 0, false);
 
             }//end for
         }//end for
@@ -33,8 +31,9 @@ public class Game {
         this.boardSize =  boardSize;
         initFreeSpaces();
 //        printBoard();
-        generate(4);
+//        generate(4);
 //        printBoard();
+        initTestBoard();
         System.out.println("Free Space: " + freeSpaces.size());
         System.out.println(moveChecker());
 
@@ -43,7 +42,7 @@ public class Game {
     //--------------------
 
     //methods:
-    public void generate(int reps){
+    private void generate(int reps){
         //need to be optimized for tile class
         //generates 2's and 4's on the board in free spaces
         //first, checks if there are enough free spaces.
@@ -182,6 +181,8 @@ public class Game {
             }//end for
         }//end for
 
+        resetBeenCombined();
+
     }//end moveUp
 
     //--------------------
@@ -195,6 +196,8 @@ public class Game {
 
             }//end for
         }//end for
+
+        resetBeenCombined();
         
     }//end moveDown
 
@@ -209,6 +212,8 @@ public class Game {
 
             }//end for
         }//end for
+
+        resetBeenCombined();
         
     }//end moveLeft
 
@@ -224,15 +229,18 @@ public class Game {
             }//end for
         }//end for
 
+        resetBeenCombined();
+
     }//end moveRight
 
     //--------------------
 
-    public void move(int dir, int r, int c){
+    private void move(int dir, int r, int c){
         //method to move a specific tile in a certain direction until it combines or runs out of free spaces
         //doesn't actually move the tile object, instead, it only shifts the values
         //1 is up, 2 is right, 3 is down, 4 is left
         //I could probably make each direction its own method, but meh
+        //could use more optimzation with movementR and movementC
 
         if(dir == 1){
             //move up
@@ -242,9 +250,24 @@ public class Game {
 
                     gameBoard[r-1][c].setValue(gameBoard[r][c].getValue());
                     gameBoard[r][c].setValue(0);
+                    freeSpaces.add(gameBoard[r][c]);
+                    freeSpaces.remove(gameBoard[r-1][c]);
                     move(dir, r-1, c);
 
-                }//end if
+                }else if(gameBoard[r][c].getValue() == gameBoard[r-1][c].getValue()){
+                    if(!gameBoard[r-1][c].isAlreadyCombined()){
+
+                        gameBoard[r-1][c].setValue(gameBoard[r-1][c].getValue()*2);
+                        //doubles the value
+                        gameBoard[r][c].setValue(0);
+                        //sets the current one to zero
+                        gameBoard[r-1][c].setAlreadyCombined(true);
+                        beenCombined.add(gameBoard[r-1][c]);
+                        //updates the beenCombined array for future resetting
+                        freeSpaces.add(gameBoard[r][c]);
+
+                    }//end if
+                }//end else if
             }//end if
 
         }else if(dir == 2){
@@ -255,9 +278,23 @@ public class Game {
 
                     gameBoard[r][c+1].setValue(gameBoard[r][c].getValue());
                     gameBoard[r][c].setValue(0);
+                    freeSpaces.add(gameBoard[r][c]);
+                    freeSpaces.remove(gameBoard[r][c+1]);
                     move(dir, r, c+1);
 
-                }//end if
+                }else if(gameBoard[r][c].getValue() == gameBoard[r][c+1].getValue()){
+                    if(!gameBoard[r][c+1].isAlreadyCombined()) {
+
+                        gameBoard[r][c+1].setValue(gameBoard[r][c+1].getValue() * 2);
+                        //doubles the value
+                        gameBoard[r][c].setValue(0);
+                        //sets the current one to zero
+                        gameBoard[r][c+1].setAlreadyCombined(true);
+                        beenCombined.add(gameBoard[r][c+1]);
+                        freeSpaces.add(gameBoard[r][c]);
+
+                    }//end if
+                }//end elif
             }//end if
 
         }else if(dir == 3){
@@ -270,7 +307,19 @@ public class Game {
                     gameBoard[r][c].setValue(0);
                     move(dir, r+1, c);
 
-                }//end if
+                }else if(gameBoard[r][c].getValue() == gameBoard[r+1][c].getValue()){
+                    if(!gameBoard[r+1][c].isAlreadyCombined()) {
+
+                        gameBoard[r+1][c].setValue(gameBoard[r+1][c].getValue() * 2);
+                        //doubles the value
+                        gameBoard[r][c].setValue(0);
+                        //sets the current one to zero
+                        gameBoard[r+1][c].setAlreadyCombined(true);
+                        beenCombined.add(gameBoard[r+1][c]);
+                        freeSpaces.add(gameBoard[r][c]);
+
+                    }//end if
+                }//end elif
             }//end if
 
         }else if(dir == 4){
@@ -283,7 +332,19 @@ public class Game {
                     gameBoard[r][c].setValue(0);
                     move(dir, r, c - 1);
 
-                }//end if
+                }else if(gameBoard[r][c].getValue() == gameBoard[r][c-1].getValue()){
+                    if(!gameBoard[r][c-1].isAlreadyCombined()) {
+
+                        gameBoard[r][c-1].setValue(gameBoard[r][c-1].getValue() * 2);
+                        //doubles the value
+                        gameBoard[r][c].setValue(0);
+                        //sets the current one to zero
+                        gameBoard[r][c-1].setAlreadyCombined(true);
+                        beenCombined.add(gameBoard[r][c-1]);
+                        freeSpaces.add(gameBoard[r][c]);
+
+                    }//end if
+                }//end elif
             }//end if
 
         }else{
@@ -296,11 +357,32 @@ public class Game {
 
     //--------------------
 
-    public void combine(){
-        //combines numbers
+    private void resetBeenCombined(){
 
+        while(beenCombined.size() > 0){
 
-    }//end combine
+            beenCombined.remove(0).setAlreadyCombined(false);
+            //sets all the "beencombined" objects to false
+
+        }//end for
+
+//        System.out.println(beenCombined.size());
+
+    }//end resetBeenCombined
+
+    //--------------------
+
+    private void initTestBoard(){
+
+        for (int r = 0; r < gameBoard.length; r++) {
+            for (int c = 0; c < gameBoard[0].length; c++) {
+
+                gameBoard[r][c] = new Tile(r, c, 2, false);
+
+            }//end for
+        }//end for
+
+    }//end initTestBoard
 
     //--------------------
 

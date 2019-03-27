@@ -4,9 +4,10 @@ public class Tile {
 
     //instance fields
     private int r, c, value;
+    private boolean alreadyCombined;
 
     //constructors
-    public Tile(int r, int c, int value){
+    public Tile(int r, int c, int value, boolean alreadyCombined){
 
         this.r = r;
         this.c = c;
@@ -43,6 +44,14 @@ public class Tile {
         this.value = value;
     }
 
+    public boolean isAlreadyCombined() {
+        return alreadyCombined;
+    }
+
+    public void setAlreadyCombined(boolean alreadyCombined) {
+        this.alreadyCombined = alreadyCombined;
+    }
+
     //--------------------
 
     public void draw(int tileSize, Graphics2D g2){
@@ -61,7 +70,7 @@ public class Tile {
             g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
             g2.setColor(new Color(65, 65, 65));
             g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
-            g2.setColor(new Color(89, 67, 25));
+//            g2.setColor(new Color(255, 255, 255));
             g2.drawString("2", c * tileSize + 95, r * tileSize + 165);
 
         }else if(value == 4){
@@ -70,7 +79,7 @@ public class Tile {
             g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
             g2.setColor(new Color(65, 65, 65));
             g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
-            g2.setColor(new Color(89, 67, 25));
+//            g2.setColor(new Color(255, 255, 255));
             g2.drawString("4", c * tileSize + 95, r * tileSize + 165);
 
         }else if(value == 8){
@@ -79,11 +88,28 @@ public class Tile {
             g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
             g2.setColor(new Color(65, 65, 65));
             g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
-            g2.setColor(new Color(89, 67, 25));
+//            g2.setColor(new Color(255, 255, 255));
             g2.drawString("8", c * tileSize + 95, r * tileSize + 165);
 
+        }else if(value == 16){
+
+            g2.setColor(new Color(255, 132, 84));
+            g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+            g2.setColor(new Color(65, 65, 65));
+            g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+//            g2.setColor(new Color(255, 255, 255));
+            g2.drawString("16", c * tileSize + 60, r * tileSize + 165);
+
+        }else if(value == 32){
+
+            g2.setColor(new Color(255, 98, 84));
+            g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+            g2.setColor(new Color(65, 65, 65));
+            g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+//            g2.setColor(new Color(255, 255, 255));
+            g2.drawString("32", c * tileSize + 60, r * tileSize + 165);
+
         }
-        //TODO: add more numbers until 2048
 
     }//end draw
 
