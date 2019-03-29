@@ -57,6 +57,8 @@ public class Tile {
     public void draw(int tileSize, Graphics2D g2){
         //draws each specific tile
 
+        g2.setFont(new Font("Comic Sans", Font.BOLD, 100));
+
         if(value == 0){
 
             g2.setColor(new Color(235, 235, 235));
@@ -108,6 +110,25 @@ public class Tile {
             g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
 //            g2.setColor(new Color(255, 255, 255));
             g2.drawString("32", c * tileSize + 60, r * tileSize + 165);
+
+        }else if(value == 64){
+
+            g2.setColor(new Color(255, 92, 127));
+            g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+            g2.setColor(new Color(65, 65, 65));
+            g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+//            g2.setColor(new Color(255, 255, 255));
+            g2.drawString("64", c * tileSize + 60, r * tileSize + 165);
+
+        }else if(value == 128){
+
+            g2.setFont(new Font("Comic Sans", Font.BOLD, 75));
+            g2.setColor(new Color(232, 97, 167));
+            g2.fillRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+            g2.setColor(new Color(65, 65, 65));
+            g2.drawRect(50 + c * tileSize, 50 + r * tileSize, tileSize, tileSize);
+//            g2.setColor(new Color(255, 255, 255));
+            g2.drawString("128", c * tileSize + 50, r * tileSize + 155);
 
         }
 

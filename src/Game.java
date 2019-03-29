@@ -30,10 +30,12 @@ public class Game {
         
         this.boardSize =  boardSize;
         initFreeSpaces();
+//        printFreeSpacesList();
 //        printBoard();
-//        generate(4);
+        generate(4);
 //        printBoard();
-        initTestBoard();
+//        initTestBoard();
+//        printFreeSpacesList();
         System.out.println("Free Space: " + freeSpaces.size());
         System.out.println(moveChecker());
 
@@ -97,6 +99,20 @@ public class Game {
 
     //--------------------
 
+    private void printFreeSpacesList(){
+
+        for (int i = 0; i < freeSpaces.size(); i++) {
+
+            System.out.println(freeSpaces.get(i).getR() + ", " + freeSpaces.get(i).getC());
+
+        }//end for
+
+        System.out.println(freeSpaces.size());
+
+    }//end printFreeSpacesList
+
+    //--------------------
+
     //checks if game is over or not
     public boolean moveChecker(){
         //Should comply with new Tile class
@@ -149,6 +165,12 @@ public class Game {
 
         }//end if
 
+        if(deadGame){
+
+            System.out.println("No more possible moves!");
+
+        }//end if
+
         return deadGame;
 
     }//end moveChecker
@@ -181,7 +203,24 @@ public class Game {
             }//end for
         }//end for
 
+        if(freeSpaces.size() > 1) {
+
+            generate(2);
+
+        }else if(freeSpaces.size() == 1){
+
+            generate(1);
+
+        }else{
+
+            gameOver = moveChecker();
+
+        }//end else
+
         resetBeenCombined();
+
+//        printBoard();
+//        printFreeSpacesList();
 
     }//end moveUp
 
@@ -197,7 +236,24 @@ public class Game {
             }//end for
         }//end for
 
+        if(freeSpaces.size() > 1) {
+
+            generate(2);
+
+        }else if(freeSpaces.size() == 1){
+
+            generate(1);
+
+        }else{
+
+            gameOver = moveChecker();
+
+        }//end else
+
         resetBeenCombined();
+
+//        printBoard();
+//        printFreeSpacesList();
         
     }//end moveDown
 
@@ -213,7 +269,24 @@ public class Game {
             }//end for
         }//end for
 
+        if(freeSpaces.size() > 1) {
+
+            generate(2);
+
+        }else if(freeSpaces.size() == 1){
+
+            generate(1);
+
+        }else{
+
+            gameOver = moveChecker();
+
+        }//end else
+
         resetBeenCombined();
+
+//        printBoard();
+//        printFreeSpacesList();
         
     }//end moveLeft
 
@@ -229,7 +302,24 @@ public class Game {
             }//end for
         }//end for
 
+        if(freeSpaces.size() > 1) {
+
+            generate(2);
+
+        }else if(freeSpaces.size() == 1){
+
+            generate(1);
+
+        }else{
+
+            gameOver = moveChecker();
+
+        }//end else
+
         resetBeenCombined();
+
+//        printBoard();
+//        printFreeSpacesList();
 
     }//end moveRight
 
@@ -305,6 +395,8 @@ public class Game {
 
                     gameBoard[r+1][c].setValue(gameBoard[r][c].getValue());
                     gameBoard[r][c].setValue(0);
+                    freeSpaces.add(gameBoard[r][c]);
+                    freeSpaces.remove(gameBoard[r+1][c]);
                     move(dir, r+1, c);
 
                 }else if(gameBoard[r][c].getValue() == gameBoard[r+1][c].getValue()){
@@ -330,7 +422,9 @@ public class Game {
 
                     gameBoard[r][c-1].setValue(gameBoard[r][c-1].getValue() + gameBoard[r][c].getValue());
                     gameBoard[r][c].setValue(0);
-                    move(dir, r, c - 1);
+                    freeSpaces.add(gameBoard[r][c]);
+                    freeSpaces.remove(gameBoard[r][c-1]);
+                    move(dir, r, c-1);
 
                 }else if(gameBoard[r][c].getValue() == gameBoard[r][c-1].getValue()){
                     if(!gameBoard[r][c-1].isAlreadyCombined()) {
